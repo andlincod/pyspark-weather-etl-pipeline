@@ -2,7 +2,7 @@
 
 Un pipeline ETL listo para producción construido con PySpark para procesar datos meteorológicos, con análisis avanzados, verificaciones de calidad de datos y monitoreo integral.
 
-## 🌤️ Qué Hace Este Proyecto
+##  Qué Hace Este Proyecto
 
 Este proyecto es un **sistema completo de procesamiento de datos meteorológicos** que toma datos meteorológicos en bruto y los transforma en conjuntos de datos limpios y listos para análisis. Aquí te explicamos qué hace en términos simples:
 
@@ -26,20 +26,20 @@ Este proyecto es un **sistema completo de procesamiento de datos meteorológicos
 - **Datos en formato Parquet** para análisis rápidos y aprendizaje automático
 
 ### **Perfecto Para**:
-- 🌡️ **Análisis meteorológico** e investigación climática
-- 📊 **Proyectos de ciencia de datos** y aprendizaje automático
-- 📈 **Inteligencia de negocios** e informes
-- 🎓 **Aprender PySpark** y procesamiento de big data
-- 🏢 **Pipelines ETL de producción** para datos meteorológicos
+-  **Análisis meteorológico** e investigación climática
+-  **Proyectos de ciencia de datos** y aprendizaje automático
+-  **Inteligencia de negocios** e informes
+-  **Aprender PySpark** y procesamiento de big data
+-  **Pipelines ETL de producción** para datos meteorológicos
 
 ### **Beneficios Clave**:
-- ✅ **Maneja grandes conjuntos de datos** de manera eficiente (96K+ registros procesados)
-- ✅ **Limpia datos automáticamente** y elimina lecturas inválidas
-- ✅ **Añade análisis avanzados** automáticamente
-- ✅ **Listo para producción** con Docker, pruebas y monitoreo
-- ✅ **Fácil de usar** con documentación clara y ejemplos
+-  **Maneja grandes conjuntos de datos** de manera eficiente (96K+ registros procesados)
+-  **Limpia datos automáticamente** y elimina lecturas inválidas
+-  **Añade análisis avanzados** automáticamente
+-  **Listo para producción** con Docker, pruebas y monitoreo
+-  **Fácil de usar** con documentación clara y ejemplos
 
-## 🏗️ Arquitectura
+##  Arquitectura
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -62,7 +62,7 @@ Este proyecto es un **sistema completo de procesamiento de datos meteorológicos
                        └─────────────────┘
 ```
 
-## 🚀 Características
+##  Características
 
 - **Pipeline ETL Escalable**: Construido con PySpark para procesamiento de big data
 - **Verificaciones de Calidad de Datos**: Validación y monitoreo integral
@@ -71,7 +71,7 @@ Este proyecto es un **sistema completo de procesamiento de datos meteorológicos
 - **Pruebas Integrales**: Pruebas unitarias con cobertura del 90%+
 - **Optimización de Rendimiento**: Particionado, caché y optimización de consultas
 
-## 📊 Procesamiento de Datos
+##  Procesamiento de Datos
 
 El pipeline procesa datos meteorológicos con las siguientes transformaciones:
 - **Limpieza de Datos**: Eliminación de duplicados, manejo de nulos, conversión de tipos, filtrado de valores inválidos
@@ -80,7 +80,7 @@ El pipeline procesa datos meteorológicos con las siguientes transformaciones:
 - **Calidad de Datos**: Validación de esquema, verificaciones de rango, métricas de completitud, validación de presión
 - **Optimización de Rendimiento**: Particionado adecuado de ventanas, caché estratégico, optimización de consultas
 
-## 🛠️ Stack Tecnológico
+##  Stack Tecnológico
 
 - **Python 3.12+**
 - **PySpark 3.5.0** - Procesamiento distribuido de datos
@@ -94,14 +94,14 @@ El pipeline procesa datos meteorológicos con las siguientes transformaciones:
 - **pytest** - Framework de pruebas
 - **Black & Flake8** - Formateo de código y linting
 
-## 📋 Prerrequisitos
+##  Prerrequisitos
 
 - Python 3.12+
-- Java 8+ (requerido para PySpark)
+- Java 11+ (requerido para PySpark)
 - Docker (opcional, para despliegue containerizado)
 - Git
 
-## 🚀 Inicio Rápido
+##  Inicio Rápido
 
 ### Desarrollo Local
 
@@ -150,7 +150,7 @@ El pipeline procesa datos meteorológicos con las siguientes transformaciones:
    docker-compose up etl-pipeline
    ```
 
-## 📁 Estructura del Proyecto
+##  Estructura del Proyecto
 
 ```
 weather-etl-pipeline/
@@ -173,7 +173,7 @@ weather-etl-pipeline/
 └── requirements.txt
 ```
 
-## 🔧 Configuración
+##  Configuración
 
 La aplicación utiliza configuración basada en variables de entorno. Configuraciones clave:
 
@@ -182,7 +182,7 @@ La aplicación utiliza configuración basada en variables de entorno. Configurac
 - `LOG_LEVEL`: Nivel de logging (DEBUG, INFO, WARNING, ERROR)
 - `SPARK_MASTER`: URL del master de Spark
 
-## 📈 Características de Rendimiento
+##  Características de Rendimiento
 
 - **Particionado de Datos**: Estrategia de particionado optimizada para grandes conjuntos de datos
 - **Operaciones de Ventana**: Particionado adecuado para funciones de ventana de series temporales
@@ -191,7 +191,7 @@ La aplicación utiliza configuración basada en variables de entorno. Configurac
 - **Optimización de Consultas**: Planes de explicación y monitoreo de rendimiento
 - **Calidad de Datos**: Filtrado automático de datos inválidos y validación
 
-## 🧪 Pruebas
+##  Pruebas
 
 Ejecutar la suite completa de pruebas:
 
@@ -206,7 +206,7 @@ pytest tests/ --cov=src --cov-report=html
 pytest tests/test_transform.py -v
 ```
 
-## 📊 Análisis
+##  Análisis
 
 El notebook de Jupyter (`notebooks/exploratory_analysis.ipynb`) proporciona:
 - Exploración y visualización de datos
@@ -215,7 +215,7 @@ El notebook de Jupyter (`notebooks/exploratory_analysis.ipynb`) proporciona:
 - Análisis de correlación
 - Informes listos para exportar
 
-## 🔄 Mejoras Recientes
+##  Mejoras Recientes
 
 ### v1.2.0 - Mejoras de Rendimiento y Calidad de Datos
 - **Calidad de Datos Mejorada**: Añadida validación de presión y filtrado de datos inválidos
@@ -225,13 +225,13 @@ El notebook de Jupyter (`notebooks/exploratory_analysis.ipynb`) proporciona:
 - **Monitoreo de Rendimiento**: Mejorado logging y seguimiento de rendimiento
 
 ### Características Clave Añadidas:
-- ✅ Filtrado automático de valores de presión inválidos (lecturas de 0.0)
-- ✅ Operaciones de ventana optimizadas con particionado por año/mes
-- ✅ Validación de calidad de datos mejorada con reportes detallados
-- ✅ Integración de librerías de computación científica
-- ✅ Manejo de errores y logging mejorado
+-  Filtrado automático de valores de presión inválidos (lecturas de 0.0)
+-  Operaciones de ventana optimizadas con particionado por año/mes
+-  Validación de calidad de datos mejorada con reportes detallados
+-  Integración de librerías de computación científica
+-  Manejo de errores y logging mejorado
 
-## 🚀 CI/CD
+##  CI/CD
 
 El proyecto incluye workflows de GitHub Actions para:
 - Pruebas automatizadas en Python 3.12
@@ -239,7 +239,7 @@ El proyecto incluye workflows de GitHub Actions para:
 - Escaneo de seguridad
 - Construcción de imágenes Docker
 
-## 📝 Contribuir
+##  Contribuir
 
 1. Fork el repositorio
 2. Crear una rama de feature (`git checkout -b feature/amazing-feature`)
@@ -249,20 +249,36 @@ El proyecto incluye workflows de GitHub Actions para:
 
 ## 📄 Licencia
 
-Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
+Este proyecto está licenciado bajo la Licencia MIT.
 
-## 👨‍💻 Autor
+##  Autor
 
 **Andres Miller**
 - LinkedIn: www.linkedin.com/in/andres-miller
 - Email: andlincod@outlook.com
 
-## 🙏 Agradecimientos
+##  Agradecimientos
 
-- Datos meteorológicos proporcionados por [fuente de datos]
+- Datos meteorológicos proporcionados por "https://www.kaggle.com/datasets/muthuj7/weather-dataset/data"
 - Comunidad de PySpark por la excelente documentación
 - Contribuidores de código abierto
 
----
+- ##  Resolución de Problemas: Errores Comunes y Soluciones
 
-**Construido con ❤️ para el equipo Luca TIC**
+Esta sección describe problemas comunes que podrías encontrar al configurar o ejecutar este proyecto, junto con soluciones paso a paso para resolverlos.
+
+- **Error: 'Java no encontrado' al inicializar PySpark**  
+  **Solución**: Asegúrate de que Java 8+ esté instalado y agregado a tu PATH. Instálalo a través de tu gestor de paquetes (ej., `sudo apt install default-jre` en Ubuntu) y verifica con `java -version`.
+
+- **Error: Módulo no encontrado o errores de importación después de instalar dependencias**  
+  **Solución**: Primero activa tu entorno virtual (ej., `source venv/bin/activate`), luego ejecuta `pip install -r requirements.txt`. Si los problemas persisten, verifica conflictos de versiones en requirements.txt.
+
+- **Error: Permiso denegado al escribir archivos (ej., .env.example)**  
+  **Solución**: Esto puede ocurrir debido a restricciones del sistema de archivos. Usa `sudo` para privilegios elevados o asegúrate de que el directorio sea escribible. Alternativamente, crea el archivo manualmente o a través de un script, y agrégalo a .gitignore si es necesario.
+
+- **Error: Fallos de sesión de Spark debido a configuración**  
+  **Solución**: Revisa tu archivo .env para configuraciones de SPARK_MASTER. Si ejecutas localmente, configúralo como 'local[*]'. Verifica la instalación de Spark y reinicia tu entorno.
+
+- **Error: Problemas de calidad de datos como esquemas inválidos o valores nulos**  
+  **Solución**: Ejecuta la validación de datos explícitamente a través del pipeline ETL (ej., `python dags/etl_pipeline.py`). Inspecciona los logs en el archivo LOG_FILE especificado para detalles y ajusta las configuraciones en config.py.
+
