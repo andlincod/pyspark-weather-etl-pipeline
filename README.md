@@ -2,7 +2,7 @@
 
 A production-ready ETL pipeline built with PySpark for processing weather data, featuring advanced analytics, data quality checks, and comprehensive monitoring.
 
-## 🌤️ What This Project Does
+## What This Project Does
 
 This project is a **complete weather data processing system** that takes raw weather data and transforms it into clean, analysis-ready datasets. Here's what it does in simple terms:
 
@@ -26,20 +26,20 @@ This project is a **complete weather data processing system** that takes raw wea
 - **Data in Parquet format** for fast analytics and machine learning
 
 ### **Perfect For**:
-- 🌡️ **Weather analysis** and climate research
-- 📊 **Data science projects** and machine learning
-- 📈 **Business intelligence** and reporting
-- 🎓 **Learning PySpark** and big data processing
-- 🏢 **Production ETL pipelines** for weather data
+-  **Weather analysis** and climate research
+-  **Data science projects** and machine learning
+-  **Business intelligence** and reporting
+-  **Learning PySpark** and big data processing
+-  **Production ETL pipelines** for weather data
 
 ### **Key Benefits**:
-- ✅ **Handles large datasets** efficiently (96K+ records processed)
-- ✅ **Automatically cleans data** and removes invalid readings
-- ✅ **Adds advanced analytics** features automatically
-- ✅ **Production-ready** with Docker, testing, and monitoring
-- ✅ **Easy to use** with clear documentation and examples
+-  **Handles large datasets** efficiently (96K+ records processed)
+-  **Automatically cleans data** and removes invalid readings
+-  **Adds advanced analytics** features automatically
+-  **Production-ready** with Docker, testing, and monitoring
+-  **Easy to use** with clear documentation and examples
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -60,7 +60,7 @@ This project is a **complete weather data processing system** that takes raw wea
                        └─────────────────┘
 ```
 
-## 🚀 Features
+##  Features
 
 - **Scalable ETL Pipeline**: Built with PySpark for big data processing
 - **Data Quality Checks**: Comprehensive validation and monitoring
@@ -69,7 +69,7 @@ This project is a **complete weather data processing system** that takes raw wea
 - **Comprehensive Testing**: Unit tests with 90%+ coverage
 - **Performance Optimization**: Partitioning, caching, and query optimization
 
-## 📊 Data Processing
+##  Data Processing
 
 The pipeline processes weather data with the following transformations:
 - **Data Cleaning**: Duplicate removal, null handling, type conversion, invalid value filtering
@@ -78,7 +78,7 @@ The pipeline processes weather data with the following transformations:
 - **Data Quality**: Schema validation, range checks, completeness metrics, pressure validation
 - **Performance Optimization**: Proper window partitioning, strategic caching, query optimization
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Python 3.12+**
 - **PySpark 3.5.0** - Distributed data processing
@@ -92,14 +92,14 @@ The pipeline processes weather data with the following transformations:
 - **pytest** - Testing framework
 - **Black & Flake8** - Code formatting and linting
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - Python 3.12+
-- Java 8+ (required for PySpark)
+- Java 11+ (required for PySpark)
 - Docker (optional, for containerized deployment)
 - Git
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Local Development
 
@@ -148,7 +148,7 @@ The pipeline processes weather data with the following transformations:
    docker-compose up etl-pipeline
    ```
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 weather-etl-pipeline/
@@ -180,7 +180,7 @@ The application uses environment-based configuration. Key settings:
 - `LOG_LEVEL`: Logging level (DEBUG, INFO, WARNING, ERROR)
 - `SPARK_MASTER`: Spark master URL
 
-## 📈 Performance Features
+##  Performance Features
 
 - **Data Partitioning**: Optimized partitioning strategy for large datasets
 - **Window Operations**: Proper partitioning for time-series window functions
@@ -189,7 +189,7 @@ The application uses environment-based configuration. Key settings:
 - **Query Optimization**: Explain plans and performance monitoring
 - **Data Quality**: Automated invalid data filtering and validation
 
-## 🧪 Testing
+##  Testing
 
 Run the complete test suite:
 
@@ -213,7 +213,7 @@ The Jupyter notebook (`notebooks/exploratory_analysis.ipynb`) provides:
 - Correlation analysis
 - Export-ready reports
 
-## 🔄 Recent Improvements
+##  Recent Improvements
 
 ### v1.2.0 - Performance & Data Quality Enhancements
 - **Enhanced Data Quality**: Added pressure validation and invalid data filtering
@@ -223,13 +223,13 @@ The Jupyter notebook (`notebooks/exploratory_analysis.ipynb`) provides:
 - **Performance Monitoring**: Improved logging and performance tracking
 
 ### Key Features Added:
-- ✅ Automatic filtering of invalid pressure values (0.0 readings)
-- ✅ Optimized window operations with year/month partitioning
-- ✅ Enhanced data quality validation with detailed reporting
-- ✅ Scientific computing library integration
-- ✅ Improved error handling and logging
+-  Automatic filtering of invalid pressure values (0.0 readings)
+-  Optimized window operations with year/month partitioning
+-  Enhanced data quality validation with detailed reporting
+-  Scientific computing library integration
+-  Improved error handling and logging
 
-## 🚀 CI/CD
+##  CI/CD
 
 The project includes GitHub Actions workflows for:
 - Automated testing on Python 3.12
@@ -237,7 +237,7 @@ The project includes GitHub Actions workflows for:
 - Security scanning
 - Docker image building
 
-## 📝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -245,27 +245,24 @@ The project includes GitHub Actions workflows for:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+##  License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
+This project is licensed under the MIT License
+##  Author
 
 **Andres Miller**
-- LinkedIn: [Your LinkedIn Profile]
-- Email: [your.email@example.com]
+- LinkedIn: www.linkedin.com/in/andres-miller
+- Email: andlincod@outlook.com
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
-- Weather data provided by [data source]
+- Weather data provided by "https://www.kaggle.com/datasets/muthuj7/weather-dataset/data"
 - PySpark community for excellent documentation
 - Open source contributors
 
 ---
 
-**Built with ❤️ for the Luca TIC team**
-
-## 🛠️ Troubleshooting: Common Errors and Solutions
+##  Troubleshooting: Common Errors and Solutions
 
 This section outlines common issues you might encounter while setting up or running this project, along with step-by-step solutions to resolve them.
 
@@ -283,14 +280,3 @@ This section outlines common issues you might encounter while setting up or runn
 
 - **Error: Data quality issues like invalid schemas or null values**  
   **Solution**: Run data validation explicitly via the ETL pipeline (e.g., `python dags/etl_pipeline.py`). Inspect logs in the specified LOG_FILE for details and adjust configurations in config.py.
-
-## 🏅 Badges
-
-Add these badges to your README for a professional look:
-
-- ![Python Version](https://img.shields.io/badge/Python-3.12+-blue)  
-- ![PySpark](https://img.shields.io/badge/PySpark-3.5.0-orange)  
-- ![CI Status](https://github.com/your-username/weather-etl-pipeline/workflows/ci.yml/badge.svg)  
-- ![License](https://img.shields.io/badge/License-MIT-green)
-
-Replace 'your-username/weather-etl-pipeline' with your actual repo URL for the CI badge.
