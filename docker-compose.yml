@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # ETL Pipeline Service
+  etl-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: weather-etl-pipeline
+    environment:
+      - ENV=prod
+      - RAW_PATH=/app/data/raw/weatherHistory.csv
+      - PROCESSED_DIR=/app/data/processed/
+      - LOG_LEVEL=INFO
+      - SPARK_MASTER=local[*]
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./src:/app/src
+    command: ["python", "dags/etl_pipeline.py", "--mode", "single", "--formats", "parquet", "csv"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import pyspark; print('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development Environment
+  etl-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: weather-etl-dev
+    environment:
+      - ENV=dev
+      - RAW_PATH=/app/data/raw/weatherHistory.csv
+      - PROCESSED_DIR=/app/data/processed/
+      - LOG_LEVEL=DEBUG
+      - SPARK_MASTER=local[*]
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./src:/app/src
+      - ./notebooks:/app/notebooks
+      - ./tests:/app/tests
+    ports:
+      - "8888:8888"
+    command: ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+    restart: unless-stopped
+    profiles:
+      - dev
+
+  # Testing Service
+  etl-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: weather-etl-test
+    environment:
+      - ENV=test
+      - RAW_PATH=/app/data/raw/weatherHistory.csv
+      - PROCESSED_DIR=/app/data/processed/
+      - LOG_LEVEL=WARNING
+      - SPARK_MASTER=local[1]
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./src:/app/src
+      - ./tests:/app/tests
+    command: ["python", "-m", "pytest", "tests/", "-v", "--cov=src", "--cov-report=html"]
+    profiles:
+      - test
+
+  # Scheduled ETL Service
+  etl-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: weather-etl-scheduler
+    environment:
+      - ENV=prod
+      - RAW_PATH=/app/data/raw/weatherHistory.csv
+      - PROCESSED_DIR=/app/data/processed/
+      - LOG_LEVEL=INFO
+      - SPARK_MASTER=local[*]
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./src:/app/src
+    command: ["python", "dags/etl_pipeline.py", "--mode", "scheduled"]
+    restart: unless-stopped
+    profiles:
+      - scheduler
+
+  # Data Quality Report Service
+  etl-quality-report:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: weather-etl-quality-report
+    environment:
+      - ENV=prod
+      - RAW_PATH=/app/data/raw/weatherHistory.csv
+      - PROCESSED_DIR=/app/data/processed/
+      - LOG_LEVEL=INFO
+      - SPARK_MASTER=local[*]
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./src:/app/src
+      - ./reports:/app/reports
+    command: ["python", "-c", "from src.extract.extract_data import DataExtractor; from src.utils.data_quality import DataQualityValidator; from src.config import config; import json; extractor = DataExtractor(); df = extractor.read_csv_to_spark(); validator = DataQualityValidator(extractor.spark); results = validator.run_full_validation(df); open('/app/reports/data_quality_report.json', 'w').write(json.dumps(results, indent=2, default=str)); print('Data quality report generated')"]
+    profiles:
+      - quality-report
+
+volumes:
+  data:
+    driver: local
+  logs:
+    driver: local
+  reports:
+    driver: local
+
+networks:
+  default:
+    name: weather-etl-network

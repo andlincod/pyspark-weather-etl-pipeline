@@ -1,0 +1,331 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  PYTHON_VERSION: '3.12'
+  SPARK_VERSION: '3.5.0'
+
+jobs:
+  # Code Quality Checks
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8 pytest pytest-cov
+        pip install -r requirements.txt
+        
+    - name: Run Black (code formatting)
+      run: black --check --diff src/ tests/ dags/
+      
+    - name: Run Flake8 (linting)
+      run: flake8 src/ tests/ dags/ --count --select=E9,F63,F7,F82 --show-source --statistics
+      
+    - name: Run Flake8 (style checks)
+      run: flake8 src/ tests/ dags/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  # Unit Tests
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-8-jdk
+        echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> $GITHUB_ENV
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov pytest-xdist
+        
+    - name: Create test data directory
+      run: |
+        mkdir -p data/raw data/processed data/temp data/backup logs
+        
+    - name: Download test data
+      run: |
+        # Create a small test dataset
+        python -c "
+        import pandas as pd
+        import os
+        os.makedirs('data/raw', exist_ok=True)
+        
+        # Create sample weather data
+        data = {
+            'Formatted Date': ['2006-04-01 00:00:00.000 +0200', '2006-04-01 01:00:00.000 +0200'],
+            'Summary': ['Partly Cloudy', 'Mostly Cloudy'],
+            'Precip Type': ['rain', 'rain'],
+            'Temperature (C)': [9.47, 9.36],
+            'Apparent Temperature (C)': [7.39, 7.23],
+            'Humidity': [0.89, 0.86],
+            'Wind Speed (km/h)': [14.12, 14.26],
+            'Wind Bearing (degrees)': [251.0, 259.0],
+            'Visibility (km)': [15.83, 15.83],
+            'Loud Cover': [0.0, 0.0],
+            'Pressure (millibars)': [1015.13, 1015.63],
+            'Daily Summary': ['Partly cloudy throughout the day.', 'Partly cloudy throughout the day.']
+        }
+        
+        df = pd.DataFrame(data)
+        df.to_csv('data/raw/weatherHistory.csv', index=False)
+        print('Test data created')
+        "
+        
+    - name: Run tests with coverage
+      run: |
+        pytest tests/ -v --cov=src --cov-report=xml --cov-report=html --cov-report=term-missing
+        
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  # Integration Tests
+  integration-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-8-jdk
+        echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> $GITHUB_ENV
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Create test data
+      run: |
+        mkdir -p data/raw data/processed data/temp data/backup logs
+        # Use the same test data creation as in unit tests
+        python -c "
+        import pandas as pd
+        import os
+        os.makedirs('data/raw', exist_ok=True)
+        
+        data = {
+            'Formatted Date': ['2006-04-01 00:00:00.000 +0200', '2006-04-01 01:00:00.000 +0200'],
+            'Summary': ['Partly Cloudy', 'Mostly Cloudy'],
+            'Precip Type': ['rain', 'rain'],
+            'Temperature (C)': [9.47, 9.36],
+            'Apparent Temperature (C)': [7.39, 7.23],
+            'Humidity': [0.89, 0.86],
+            'Wind Speed (km/h)': [14.12, 14.26],
+            'Wind Bearing (degrees)': [251.0, 259.0],
+            'Visibility (km)': [15.83, 15.83],
+            'Loud Cover': [0.0, 0.0],
+            'Pressure (millibars)': [1015.13, 1015.63],
+            'Daily Summary': ['Partly cloudy throughout the day.', 'Partly cloudy throughout the day.']
+        }
+        
+        df = pd.DataFrame(data)
+        df.to_csv('data/raw/weatherHistory.csv', index=False)
+        print('Test data created')
+        "
+        
+    - name: Run ETL Pipeline Integration Test
+      run: |
+        python dags/etl_pipeline.py --mode single --formats parquet csv
+        
+    - name: Verify output files
+      run: |
+        ls -la data/processed/
+        test -f data/processed/weather_agg.parquet
+        test -f data/processed/weather_agg.csv
+
+  # Docker Build and Test
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build Docker image
+      run: |
+        docker build -t weather-etl:latest .
+        
+    - name: Test Docker image
+      run: |
+        # Test production image
+        docker run --rm weather-etl:latest python -c "import pyspark; print('PySpark import successful')"
+        
+        # Test development image
+        docker build -t weather-etl:dev --target development .
+        docker run --rm weather-etl:dev python -c "import jupyter; print('Jupyter import successful')"
+
+  # Security Scan
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  # Performance Test
+  performance:
+    name: Performance Test
+    runs-on: ubuntu-latest
+    needs: [test, integration-test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-8-jdk
+        echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> $GITHUB_ENV
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install memory-profiler psutil
+        
+    - name: Create performance test data
+      run: |
+        mkdir -p data/raw data/processed data/temp data/backup logs
+        
+        # Create larger dataset for performance testing
+        python -c "
+        import pandas as pd
+        import numpy as np
+        import os
+        from datetime import datetime, timedelta
+        
+        os.makedirs('data/raw', exist_ok=True)
+        
+        # Generate 10,000 rows of test data
+        n_rows = 10000
+        start_date = datetime(2006, 4, 1)
+        
+        data = {
+            'Formatted Date': [(start_date + timedelta(hours=i)).strftime('%Y-%m-%d %H:%M:%S.000 +0200') for i in range(n_rows)],
+            'Summary': np.random.choice(['Partly Cloudy', 'Mostly Cloudy', 'Clear', 'Overcast'], n_rows),
+            'Precip Type': np.random.choice(['rain', 'snow', None], n_rows),
+            'Temperature (C)': np.random.normal(15, 10, n_rows),
+            'Apparent Temperature (C)': np.random.normal(12, 8, n_rows),
+            'Humidity': np.random.uniform(0.3, 1.0, n_rows),
+            'Wind Speed (km/h)': np.random.exponential(10, n_rows),
+            'Wind Bearing (degrees)': np.random.uniform(0, 360, n_rows),
+            'Visibility (km)': np.random.uniform(5, 20, n_rows),
+            'Loud Cover': np.random.uniform(0, 1, n_rows),
+            'Pressure (millibars)': np.random.normal(1013, 20, n_rows),
+            'Daily Summary': ['Weather summary'] * n_rows
+        }
+        
+        df = pd.DataFrame(data)
+        df.to_csv('data/raw/weatherHistory.csv', index=False)
+        print(f'Performance test data created with {n_rows} rows')
+        "
+        
+    - name: Run performance test
+      run: |
+        echo "Starting performance test..."
+        time python dags/etl_pipeline.py --mode single --formats parquet
+        
+    - name: Check performance metrics
+      run: |
+        echo "Checking output file sizes..."
+        ls -lh data/processed/
+        echo "Performance test completed"
+
+  # Deploy (only on main branch)
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [docker, security, performance]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add your deployment commands here
+        # For example: kubectl apply -f k8s/staging/
+        
+    - name: Run smoke tests
+      run: |
+        echo "Running smoke tests..."
+        # Add smoke test commands here
+        
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment commands here
